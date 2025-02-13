@@ -5,6 +5,10 @@
   border-bottom: 1px solid $secondary;
 
   &:first-child {
-    padding-top: 0;
+    padding-top: 0.75rem;
+  }
+
+  &:last-child {
+    border-bottom: none;
   }
 }

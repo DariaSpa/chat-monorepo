@@ -1,0 +1,40 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body,
+h1,
+h2,
+ul,
+li {
+  margin: 0;
+}
+
+ul,
+li, 
+button {
+  padding: 0;
+}
+
+h1,
+h2 {
+  font-size: inherit;
+}
+
+button,
+textarea {
+  border: none;
+  outline: none;
+  background: none;
+  font-size: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+li {
+  list-style: none;
+}

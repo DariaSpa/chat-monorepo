@@ -1,0 +1,52 @@
+@import "../../../assets/styles/variables";
+
+.message {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  color: $text-primary;
+  position: relative;
+  &:hover {
+    background-color: $background-opacity;
+  }
+
+  &.botMessage {
+   color: $text-secondary;
+
+   .userName{
+    color: $text-primary;
+   }
+  }
+
+  &:hover .actions {
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+
+  .actions {
+    position: absolute;
+    right: 0.7rem;
+    top: 0.3rem;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 0.5rem;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+  }
+
+  .messageInfo{
+    display: flex;
+    gap: 0.5rem;
+
+    .time {
+      color: $text-secondary;
+    }
+
+    .userName {
+      font-weight: 600;
+    }
+  }
+  .editWrapper {
+    display: flex;
+    gap: 0.7rem;
+  }
+}
