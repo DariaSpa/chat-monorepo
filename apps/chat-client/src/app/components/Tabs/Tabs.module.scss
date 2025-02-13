@@ -4,30 +4,31 @@
   width: 100%;
   height: 100%;
   
-    .tabButtons {
-      background-color: $primary;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
+  .tabButtons {
+    background-color: $primary;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     
     button {
       text-align: center;
-      padding: 1rem 0;
+      height: 3rem;
+      line-height: 3rem;
       border-bottom: 1px solid $secondary;
 
-    &.activeTab {
-      background-color: $background;
-      border-top: 1px solid $secondary;
-      border-bottom: none;
+      &.activeTab {
+        background-color: $background;
+        border-top: 1px solid $secondary;
+        border-bottom: none;
 
-      &:first-child {
-        border-top-right-radius: 0.5rem;
-        border-right: 1px solid $secondary;
-      }
+        &:first-child {
+          border-top-right-radius: 0.5rem;
+          border-right: 1px solid $secondary;
+        }
 
-      &:last-child {
-        border-top-left-radius: 0.5rem;
-        border-left: 1px solid $secondary;
-      }
+        &:last-child {
+          border-top-left-radius: 0.5rem;
+          border-left: 1px solid $secondary;
+        }
       }
     }
   }
@@ -46,13 +47,13 @@
   }
 
   .participants {
+    height: calc(100vh - 6rem);
     overflow-y: auto;
     border-right: 1px solid $secondary;
   }
 
   .chat {
     width: 100%;
-    padding: 1rem;
     overflow-y: auto;
   }
 }
@@ -67,7 +68,6 @@
         border-bottom: 2px solid $secondary;
       &.activeTab {
         text-align: center;
-        padding: 1rem 0;
         border-top: none;
         border-bottom: 2px solid $secondary;
         &:first-child {

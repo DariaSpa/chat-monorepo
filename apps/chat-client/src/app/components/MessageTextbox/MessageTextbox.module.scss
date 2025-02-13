@@ -1,12 +1,12 @@
 @import "../../../assets/styles/variables";
 
-$line-height: 30px;
+$line-height: 1.7rem;
 $max-lines: 3;
 
 .messageContainer {
   width: 100%;
   border: 1px solid $border-primary;
-  border-radius: 0.5rem;
+  border-radius: 0.3rem;
   transition: border-color 0.3s;
   display: flex;
   align-items: center;
@@ -28,7 +28,7 @@ $max-lines: 3;
     border: none;
     font-family: inherit;
     white-space: pre-wrap;
-    line-height: 1.4;
+    line-height: $line-height;
     margin-right: 0.6rem;
   }
 
