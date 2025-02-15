@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import Header from '../../components/Header/Header';
 import Input from '../../components/Input/Input';
@@ -9,6 +9,7 @@ import styles from './CreateRoomPage.module.scss';
 import BackIcon from '../../../assets/icons/BackIcon';
 import Modal from '../../components/Modal/Modal';
 import CopyIcon from '../../../assets/icons/CopyIcon';
+import { useChatApi } from '../../api/useChatApi';
 
 export const CreateRoomPage = () => {
   const [option, setOption] = useState<'join' | 'create' | null>(null)
@@ -16,28 +17,64 @@ export const CreateRoomPage = () => {
   const [roomName, setRoomName] = useState('');
   const [userName, setUserName] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [joinLink, setJoinLink] = useState('');
 
   const isJoinDisabled = !userName.trim() || !roomId.trim();
   const isCreateDisabled = !userName.trim() || !roomName.trim();
 
+  const chatApi = useChatApi();
   const navigate = useNavigate();
+  const [ searchParams ] = useSearchParams();
 
-  const handleJoinRoom = () => {
-    setIsModalOpen(true);
+  const join = searchParams.get('join');
+
+  useEffect(() => {
+    console.log('join', join);
+    
+    if (join) {
+      setOption('join');
+      setRoomId(join);
+    }
+  }, [join]);
+
+  const navigateToChat = () => {
+    navigate(`/chat/${roomId}?user=${userName}`);
+  }
+
+  const handleCreateRoom = async () => {
+    try {
+      if (!roomName.trim()) {
+        alert('Room name is required');
+        return;
+      }
+      
+      const { roomId } = await chatApi.createRoom(roomName);
+
+      setRoomId(roomId);
+      setJoinLink(`${window.location.origin}/?join=${roomId}`);
+      setIsModalOpen(true);
+    } catch (error) {
+      alert(`Error: ${(error as Error).message}`);
+    }
+  };
+
+  const handleJoinRoom = async () => {
+    navigateToChat();
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    navigate(`/chat/${roomId}?user=${userName}`);
+    navigateToChat();
   };
 
-
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(joinLink);
+  }
 
   return (
     <div className={styles.container}>
-
-        <div className={styles.backButton}>
-          {option && (
+      <div className={styles.backButton}>
+        {option && (
           <Button variant={'default'} onClick={() => setOption(null)}>
             <BackIcon color='#555' />
           </Button>
@@ -72,7 +109,7 @@ export const CreateRoomPage = () => {
         <div className={styles.inputSection}>
           <Input value={roomName} placeholder='Enter Room Name' onChange={setRoomName} />
           <Input value={userName} placeholder='Enter Your Name' onChange={setUserName} />
-          <Button onClick={handleJoinRoom} variant='primary' fullWidth disabled={isCreateDisabled}>
+          <Button onClick={handleCreateRoom} variant='primary' fullWidth disabled={isCreateDisabled}>
             Create & Join Room
           </Button>
         </div>
@@ -84,15 +121,11 @@ export const CreateRoomPage = () => {
           title='Room Created!'
           content={
             <>
-              <p>Copy Room ID: {' '}{roomName}</p>
-              <p>Or Share this link:</p>
+              <p>Copy room ID: {roomId}</p>
+              <p>Or share this link:</p>
               <div className={styles.linkWrapper}>
-                <Input type='text' value={`${window.location.origin}/chat/${roomName}`} placeholder={''} readOnly={true} onChange={function (value: string): void {
-                throw new Error('Function not implemented.');
-              } } />
-                <Button variant={'default'} onClick={function (): void {
-                  throw new Error('Function not implemented.');
-                } }><CopyIcon /></Button>
+                <Input type='text' value={joinLink} placeholder={''} readOnly={true} />
+                <Button variant={'default'} onClick={handleCopyLink}><CopyIcon /></Button>
               </div>
             </>
           }

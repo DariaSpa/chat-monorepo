@@ -1,21 +1,20 @@
-/**
- * This is not a production server yet!
- * This is only a minimal backend to get started.
- */
-
 import express from 'express';
-import * as path from 'path';
+import cors from 'cors';
+import { WebSocketServer } from 'ws';
+import { API_ORIGIN, CLIENT_ORIGIN, config } from './config/env';
+import roomRoutes from './routes/roomRoutes';
+import { setupWebSocket } from './services/websocketService';
 
 const app = express();
 
-app.use('/assets', express.static(path.join(__dirname, 'assets')));
+app.use(cors({ origin: CLIENT_ORIGIN }));
 
-app.get('/api', (req, res) => {
-  res.send({ message: 'Welcome to chat-service!' });
+app.use(express.json());
+app.use('/api', roomRoutes);
+
+const server = app.listen(config.PORT, () => {
+  console.log(`Server running on ${API_ORIGIN}`);
 });
 
-const port = process.env.PORT || 3333;
-const server = app.listen(port, () => {
-  console.log(`Listening at http://localhost:${port}/api`);
-});
-server.on('error', console.error);
+const wss = new WebSocketServer({ server });
+setupWebSocket(wss);

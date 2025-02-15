@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import styles from './Message.module.scss';
+import { ChatEventType } from '@chat-monorepo/chat-api';
 import Input from '../Input/Input';
 import Button from '../Button/Button';
+import { useChatApi } from '../../api/useChatApi';
+import styles from './Message.module.scss';
 
 export interface ChatMessage {
   id: string;
@@ -22,30 +24,43 @@ export interface MessageProps {
 const Message: React.FC<MessageProps> = ({ message, userId }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [newContent, setNewContent] = useState(message.content);
+  const chatApiClient = useChatApi();
 
-  const formattedTime = new Date(message.timestamp).toLocaleTimeString("en-GB", {
-    hour: "2-digit",
-    minute: "2-digit",
+  const formattedTime = new Date(message.timestamp).toLocaleTimeString('en-GB', {
+    hour: '2-digit',
+    minute: '2-digit',
   });
 
   const handleEdit = () => {
-    console.log(`'message was edited: ${message.id}`)
+    if (!newContent.trim()) return;
+    
+    chatApiClient.sendWebSocketMessage({
+      type: ChatEventType.EDIT,
+      messageId: message.id,
+      content: newContent,
+      userId,
+    });
+  
     setIsEditing(false);
   };
-
+  
   const handleDelete = () => {
-    console.log(`'message was deleted: ${message.id}`)
+    chatApiClient.sendWebSocketMessage({
+      type: ChatEventType.DELETE,
+      messageId: message.id,
+      userId,
+    });
   };
 
   return (
-    <div className={`${styles.message} ${message.type === "bot" ? styles.botMessage : ""}`}>
+    <div className={`${styles.message} ${message.type === 'bot' ? styles.botMessage : ''}`}>
       <div className={styles.messageInfo}>
         <strong className={styles.userName}>{message.userName}</strong>
         <div className={styles.time}>{formattedTime}</div>
       </div>
         {isEditing ? (
         <div className={styles.editWrapper}>
-          <Input  placeholder="Edit your message..." value={newContent} onChange={setNewContent} />
+          <Input  placeholder='Edit your message...' value={newContent} onChange={setNewContent} />
           <Button onClick={handleEdit}>Save</Button>
         </div>
       ) : (

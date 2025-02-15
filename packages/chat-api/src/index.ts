@@ -1,1 +1,2 @@
-export * from './lib/chat-api';
+export * from './lib/types';
+export * from './lib/apiClient';

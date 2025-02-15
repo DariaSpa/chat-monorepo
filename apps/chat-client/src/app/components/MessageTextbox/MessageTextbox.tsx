@@ -33,7 +33,7 @@ const MessageTextbox: React.FC<MessageTextboxProps> = ({
     onChange(text);
 
     const textarea = e.target;
-    textarea.style.height = "auto"; 
+    textarea.style.height = 'auto'; 
     textarea.style.height = `${Math.min(textarea.scrollHeight, 90)}px`; 
   };
 
@@ -47,7 +47,7 @@ const MessageTextbox: React.FC<MessageTextboxProps> = ({
         className={styles.messageBox}
         maxLength={maxLength}
         rows={1}
-        aria-label="Message input"
+        aria-label='Message input'
       />
       {showButton && onButtonClick && (
         <button onClick={onButtonClick} className={styles.btn}>
