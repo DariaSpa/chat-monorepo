@@ -1,10 +1,10 @@
-import React from "react";
-import styles from "./Button.module.scss";
+import React from 'react';
+import styles from './Button.module.scss';
 
 type ButtonProps = {
   onClick: () => void;
   children: React.ReactNode;
-  variant?: "primary" | "secondary";
+  variant?: 'primary' | 'secondary' | 'default';
   fullWidth?: boolean;
   bgColor?: string; 
   disabled?: boolean;
@@ -13,15 +13,15 @@ type ButtonProps = {
 const Button: React.FC<ButtonProps> = ({
   onClick,
   children,
-  variant = "primary",
+  variant = 'primary',
   fullWidth = false,
   bgColor,
   disabled = false,
 }) => {
   return (
     <button
-    className={`${styles.button} ${styles[variant]} ${fullWidth ? styles.fullWidth : ""} ${
-      disabled ? styles.disabled : ""
+    className={`${styles.button} ${styles[variant]} ${fullWidth ? styles.fullWidth : ''} ${
+      disabled ? styles.disabled : ''
     }`}
     onClick={!disabled ? onClick : undefined}
     style={bgColor ? { backgroundColor: bgColor } : {}}

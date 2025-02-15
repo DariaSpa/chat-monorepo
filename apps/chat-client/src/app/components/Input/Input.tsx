@@ -8,6 +8,7 @@ type InputProps = {
   onChange: (value: string) => void;
   showButton?: boolean;
   onButtonClick?: () => void;
+  readOnly?: boolean;
 };
 
 const Input: React.FC<InputProps> = ({
@@ -17,15 +18,17 @@ const Input: React.FC<InputProps> = ({
   onChange,
   showButton = false,
   onButtonClick,
+  readOnly = false,
 }) => {
   return (
-    <div className={styles.inputWrapper}>
+    <div className={`${styles.inputWrapper} ${readOnly ? styles.readOnly : ''}`}>
       <input
         type={type}
         value={value}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value)} 
         placeholder={placeholder}
         className={styles.input}
+        readOnly={readOnly}
       />
       {showButton && onButtonClick && (
         <button onClick={onButtonClick} className={styles.btn}><SendIcon color={'#FFFFFF'} circleColor={'#BCBCBC'}/></button>

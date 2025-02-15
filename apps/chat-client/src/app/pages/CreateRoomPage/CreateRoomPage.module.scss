@@ -1,4 +1,4 @@
-@import "../../../assets/styles/variables";
+@import '../../../assets/styles/variables';
 
 .container {
   min-height: 100vh;
@@ -20,17 +20,6 @@
     top: 1rem;
     left: 1rem;
     cursor: pointer;
-  
-    &:hover svg path {
-      stroke: darken(#555, 15%);
-    }
-  
-    svg {
-      width: 24px;
-      height: 24px;
-      stroke: #555; 
-      transition: stroke 0.3s ease-in-out;
-    }
   }
   
   .buttonGroup {
@@ -44,6 +33,12 @@
       height: 3rem;
       flex-direction: row;
     }
+  }
+
+  .linkWrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
   }
 }
 
