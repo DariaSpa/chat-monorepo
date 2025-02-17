@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import styles from './Tabs.module.scss';
+import { useChatStore } from '../../store';
 
 type TabOption = 'chat' | 'participants';
 
@@ -10,6 +11,9 @@ interface TabsProps {
 
 export const Tabs: React.FC<TabsProps> = ({ chatContent, participantsContent }) => {
   const [activeTab, setActiveTab] = useState<TabOption>('chat');
+  const { users } = useChatStore();
+
+  const userCount = useMemo(() => Object.keys(users).length, [users]);
 
   return (
     <div className={styles.tabsContainer}>
@@ -19,7 +23,7 @@ export const Tabs: React.FC<TabsProps> = ({ chatContent, participantsContent }) 
             className={activeTab === 'participants' ? styles.activeTab : ''}
             onClick={() => setActiveTab('participants')}
           >
-            Participants
+            Participants ({userCount})
           </button>
           <button
             className={activeTab === 'chat' ? styles.activeTab : ''}
