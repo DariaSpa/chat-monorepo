@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import styles from './Tabs.module.scss';
-import { useChatStore } from '../../store';
+import { useChatStore } from '../../store/chatStore';
 
 type TabOption = 'chat' | 'participants';
 

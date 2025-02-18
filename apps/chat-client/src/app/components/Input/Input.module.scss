@@ -20,12 +20,13 @@
   }
 
   .input {
-    margin-right: 1.5rem;
     width: 100%;
     line-height: 1.5rem;
-    outline: none;
-    border: none;
     background-color: transparent;
+  }
+
+  &:has(.btn) .input {
+    margin-right: 1.5rem;
   }
 
   .btn {

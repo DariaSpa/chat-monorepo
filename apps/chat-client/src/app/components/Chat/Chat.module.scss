@@ -1,3 +1,5 @@
+@import '../../../assets/styles/variables';
+
 .chatContainer{
   display: flex;
   flex-direction: column;
@@ -5,10 +7,19 @@
   width: 100%;
   overflow: hidden;
 
-  .chatMessage {
+  .chatMessagesWrapper {
     flex: 1;
-    overflow-y: auto;
+    min-height: 0;
     padding: 0.7rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+      .chatMessages {
+        overflow-y: auto;
+        flex: 1;
+      }
   }
 
   .inputContainer {
@@ -19,4 +30,28 @@
     position: sticky;
     bottom: 0;
   }
+}
+
+.scrollToBottomButton {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.5rem;
+  background: $join-light-blue;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: opacity 0.3s ease, transform 0.3 ease;
+  opacity: 0;
+  transform: translateY(10px);
+  visibility: hidden;
+  
+    &:hover {
+      background: $secondary;
+    }
+
+    &.show {
+      opacity: 1;
+      transform: translateY(0);
+      visibility: visible;
+    }
 }

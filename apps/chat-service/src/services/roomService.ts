@@ -1,6 +1,7 @@
 import { ChatMessage } from '@chat-monorepo/chat-api';
 import { rooms } from '../models/room';
 import { generateUUID } from '../utils/uuid';
+import { createBotMessage } from '../utils/botMessage';
 
 export const createRoom = (roomName: string): string | null => {
   if (!roomName.trim()) return null;
@@ -15,14 +16,7 @@ export const addUserToRoom = (roomId: string, userId: string, userName: string):
 
   rooms[roomId].users[userId] = userName;
 
-  const joinMessage: ChatMessage = {
-    id: generateUUID(),
-    userId,
-    userName,
-    content: `${userName} has joined.`,
-    timestamp: Date.now(),
-    type: 'bot',
-  };
+  const joinMessage = createBotMessage(`${userName} joined.`);
 
   rooms[roomId].messages.push(joinMessage);
   return joinMessage;
@@ -31,14 +25,7 @@ export const addUserToRoom = (roomId: string, userId: string, userName: string):
 export const removeUserFromRoom = (roomId: string, userId: string): void => {
   if (!rooms[roomId]) return;
 
-  const leaveMessage: ChatMessage = {
-    id: generateUUID(),
-    userId,
-    userName: rooms[roomId].users[userId],
-    content: `${rooms[roomId].users[userId]} has left.`,
-    timestamp: Date.now(),
-    type: 'bot',
-  };
+  const leaveMessage = createBotMessage(`${rooms[roomId].users[userId]} left.`);
 
   rooms[roomId].messages.push(leaveMessage);
 

@@ -19,10 +19,6 @@ class ChatApiClient {
 
     this.API_URL = `${protocol}://${host}:${port}/api`;
     this.WS_URL = `${wsProtocol}://${host}:${port}`;
-
-    console.log(`[INFO] Chat API initialized with: 
-      REST: ${this.API_URL} 
-      WebSocket: ${this.WS_URL}`);
   }
 
   async getMessages(): Promise<ChatMessage[]> {
@@ -56,12 +52,10 @@ class ChatApiClient {
   connectWebSocket(roomId: string, userName: string) {
     if (this.ws) return;
 
-    console.log(`[INFO] Connecting to WebSocket at ${this.WS_URL}...`);
     this.ws = new WebSocket(`${this.WS_URL}?room=${roomId}&name=${userName}`);
     this.isReady = false;
 
     this.ws.onopen = () => {
-      console.log('[INFO] WebSocket connection established.');
       this.reconnectAttempts = 0;
       this.isReady = true;
 
@@ -77,7 +71,6 @@ class ChatApiClient {
 
     this.ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      console.log('[DEBUG] Message received:', data);
 
       if (data.type && this.eventCallbacks[data.type]) {
         this.eventCallbacks[data.type].forEach((callback) => callback(data));
@@ -90,7 +83,6 @@ class ChatApiClient {
     };
 
     this.ws.onclose = () => {
-      console.log(`[INFO] WebSocket closed. Attempting reconnect (${this.reconnectAttempts + 1}/${this.maxReconnectAttempts})`);
       this.ws = null;
       this.isReady = false;
 
@@ -112,11 +104,9 @@ class ChatApiClient {
 
   disconnectWebSocket(roomId: string, userId: string) {
     if (this.ws) {
-      console.log('[INFO] Sending "user left" notification before disconnecting WebSocket...');
       this.sendWebSocketMessage({ type: ChatEventType.LEAVE, userId });
 
       setTimeout(() => {
-        console.log('[INFO] Disconnecting WebSocket...');
         this.ws?.close();
         this.ws = null;
         this.isReady = false;
@@ -126,13 +116,11 @@ class ChatApiClient {
 
   sendWebSocketMessage(message: { type: ChatEventType; userId?: string; content?: string; messageId?: string }) {
     if (!this.ws || this.ws.readyState === WebSocket.CONNECTING) {
-      console.warn('[WARNING] WebSocket still connecting. Queuing message:', message);
       this.pendingMessages.push(message);
       return;
     }
 
     if (this.ws.readyState === WebSocket.OPEN) {
-      console.log('[DEBUG] Sending WebSocket message:', message);
       this.ws.send(JSON.stringify(message));
     } else {
       console.error('[ERROR] WebSocket is closed. Cannot send message.');

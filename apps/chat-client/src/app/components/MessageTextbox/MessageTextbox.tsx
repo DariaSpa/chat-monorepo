@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import SendIcon from '../../../assets/icons/SendIcon';
 import styles from './MessageTextbox.module.scss';
 
@@ -37,12 +37,26 @@ const MessageTextbox: React.FC<MessageTextboxProps> = ({
     textarea.style.height = `${Math.min(textarea.scrollHeight, 90)}px`; 
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      e.preventDefault();
+      onButtonClick?.();
+    }
+  };
+
+  useEffect(() => {
+    if(value === '' && textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+    }
+  }, [value]);
+
   return (
     <div className={styles.messageContainer}>
       <textarea
         ref={textareaRef}
         value={value}
         onChange={handleInput}
+        onKeyDown={handleKeyDown}
         placeholder={placeholder}
         className={styles.messageBox}
         maxLength={maxLength}

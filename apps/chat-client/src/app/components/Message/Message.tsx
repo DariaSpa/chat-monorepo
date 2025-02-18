@@ -53,7 +53,10 @@ const Message: React.FC<MessageProps> = ({ message, userId }) => {
   };
 
   return (
-    <div className={`${styles.message} ${message.type === 'bot' ? styles.botMessage : ''}`}>
+    <div 
+      className={`${styles.message} ${message.type === 'bot' ? styles.botMessage : ''} 
+      ${message.isDeleted ? styles.deletedMessage : ''}`}
+    >
       <div className={styles.messageInfo}>
         <strong className={styles.userName}>{message.userName}</strong>
         <div className={styles.time}>{formattedTime}</div>
@@ -65,8 +68,8 @@ const Message: React.FC<MessageProps> = ({ message, userId }) => {
         </div>
       ) : (
         <>
-          <span style={{ textDecoration: message.isDeleted ? 'line-through' : 'none' }}>
-            {message.content} {message.isEdited && '(edited)'}
+          <span>
+            {message.content} {message.isEdited && !message.isDeleted && '(edited)'}
           </span>
           {message.userId === userId && !message.isDeleted && (
             <div className={styles.actions}>

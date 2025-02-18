@@ -5,6 +5,7 @@ import { addMessage, editMessage, deleteMessage } from './messageService';
 import { broadcast } from '../utils/broadcast';
 import { generateUUID } from '../utils/uuid';
 import { API_ORIGIN } from '../config/env';
+import { rooms } from '../models/room';
 
 export const setupWebSocket = (wss: WebSocketServer) => {
   wss.on('connection', (ws: WebSocket, req) => {
@@ -12,15 +13,14 @@ export const setupWebSocket = (wss: WebSocketServer) => {
     const roomId = searchParams.get('room');
     const userName = searchParams.get('name') || `User-${Math.random().toString(36).substring(7)}`;
     const userId = generateUUID();
+    const roomName = rooms[roomId]?.name;
 
-    ws.send(JSON.stringify({ type: ChatEventType.CONNECTED, userId }));
+    ws.send(JSON.stringify({ type: ChatEventType.CONNECTED, userId, roomName }));
 
     if (!roomId) {
       ws.close();
       return;
     }
-
-    console.log(`User ${userName} connected to room ${roomId}`);
     
     const joinMessage = addUserToRoom(roomId, userId, userName);
     if (joinMessage) {

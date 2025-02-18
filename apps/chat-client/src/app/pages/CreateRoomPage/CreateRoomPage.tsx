@@ -29,8 +29,6 @@ export const CreateRoomPage = () => {
   const join = searchParams.get('join');
 
   useEffect(() => {
-    console.log('join', join);
-    
     if (join) {
       setOption('join');
       setRoomId(join);
