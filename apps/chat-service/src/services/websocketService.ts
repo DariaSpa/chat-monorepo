@@ -47,7 +47,7 @@ export const setupWebSocket = (wss: WebSocketServer) => {
     });
 
     ws.on('close', () => {
-      rooms[roomId]?.sockets.delete(ws); // Remove WebSocket from the room
+      rooms[roomId]?.sockets.delete(ws);
       removeUserFromRoom(roomId, userId);
       broadcast(roomId);
     });

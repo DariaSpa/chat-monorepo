@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ChatEventType } from '@chat-monorepo/chat-api';
-import Input from '../Input/Input';
+import MessageTextbox from '../MessageTextbox/MessageTextbox';
 import Button from '../Button/Button';
 import { useChatApi } from '../../api/useChatApi';
 import styles from './Message.module.scss';
@@ -32,7 +32,10 @@ const Message: React.FC<MessageProps> = ({ message, userId }) => {
   });
 
   const handleEdit = () => {
-    if (!newContent.trim()) return;
+    if (!newContent.trim() || newContent === message.content) {
+      setIsEditing(false);
+      return;
+    }
     
     chatApiClient.sendWebSocketMessage({
       type: ChatEventType.EDIT,
@@ -63,7 +66,7 @@ const Message: React.FC<MessageProps> = ({ message, userId }) => {
       </div>
         {isEditing ? (
         <div className={styles.editWrapper}>
-          <Input  placeholder='Edit your message...' value={newContent} onChange={setNewContent} />
+          <MessageTextbox  placeholder='Edit your message...' value={newContent} onChange={setNewContent} />
           <Button onClick={handleEdit}>Save</Button>
         </div>
       ) : (

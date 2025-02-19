@@ -22,19 +22,27 @@ const MessageTextbox: React.FC<MessageTextboxProps> = ({
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  const adjustHeight = () => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 90)}px`;
+    }
+  };
+
+  useEffect(() => {
+    adjustHeight();
+  }, [value]);
+
   const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     let text = e.target.value;
 
     if (text.length > maxLength) {
       text = text.substring(0, maxLength);
-      if (text === value) return; 
+      if (text === value) return;
     }
 
     onChange(text);
-
-    const textarea = e.target;
-    textarea.style.height = 'auto'; 
-    textarea.style.height = `${Math.min(textarea.scrollHeight, 90)}px`; 
+    adjustHeight();
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
