@@ -7,7 +7,7 @@ export const createRoom = (roomName: string): string | null => {
   if (!roomName.trim()) return null;
 
   const roomId = generateUUID();
-  rooms[roomId] = { id: roomId, name: roomName, users: {}, messages: [] };
+  rooms[roomId] = { id: roomId, name: roomName, users: {}, messages: [], sockets: new Set() };
   return roomId;
 };
 

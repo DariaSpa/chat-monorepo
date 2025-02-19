@@ -13,18 +13,23 @@ export const setupWebSocket = (wss: WebSocketServer) => {
     const roomId = searchParams.get('room');
     const userName = searchParams.get('name') || `User-${Math.random().toString(36).substring(7)}`;
     const userId = generateUUID();
-    const roomName = rooms[roomId]?.name;
-
-    ws.send(JSON.stringify({ type: ChatEventType.CONNECTED, userId, roomName }));
 
     if (!roomId) {
       ws.close();
       return;
     }
-    
+
+    if (!rooms[roomId]) {
+      rooms[roomId] = { id: roomId, name: `Room ${roomId}`, users: {}, messages: [], sockets: new Set() };
+    }
+
+    rooms[roomId].sockets.add(ws);
+
+    ws.send(JSON.stringify({ type: ChatEventType.CONNECTED, userId, roomName: rooms[roomId].name }));
+
     const joinMessage = addUserToRoom(roomId, userId, userName);
     if (joinMessage) {
-      broadcast(wss, roomId);
+      broadcast(roomId);
     }
 
     ws.on('message', (data) => {
@@ -38,12 +43,13 @@ export const setupWebSocket = (wss: WebSocketServer) => {
         deleteMessage(roomId, messageId, userId);
       }
 
-      broadcast(wss, roomId);
+      broadcast(roomId);
     });
 
     ws.on('close', () => {
+      rooms[roomId]?.sockets.delete(ws); // Remove WebSocket from the room
       removeUserFromRoom(roomId, userId);
-      broadcast(wss, roomId);
+      broadcast(roomId);
     });
   });
 };

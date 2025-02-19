@@ -10,7 +10,7 @@ class ChatApiClient {
   private reconnectInterval = 3000;
   private heartbeatInterval: number | null = null;
   private eventCallbacks: Record<string, EventCallback[]> = {};
-  private pendingMessages: any[] = [];
+  private pendingMessages: { type: ChatEventType; userId?: string; content?: string; messageId?: string }[] = [];
   public randomId: string = Math.random().toString(36).substring(7);
 
   constructor(host: string, port: string, ssl: boolean) {
@@ -61,7 +61,9 @@ class ChatApiClient {
 
       while (this.pendingMessages.length > 0) {
         const message = this.pendingMessages.shift();
-        this.sendWebSocketMessage(message);
+        if (message) {
+          this.sendWebSocketMessage(message);
+        }
       }
 
       this.heartbeatInterval = window.setInterval(() => {

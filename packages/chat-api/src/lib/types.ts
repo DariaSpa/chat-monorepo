@@ -1,3 +1,5 @@
+import { WebSocket } from 'ws';
+
 export interface ChatMessage {
   id: string;
   userId: string;
@@ -14,6 +16,7 @@ export interface ChatRoom {
   name: string;
   users: Record<string, string>;
   messages: ChatMessage[];
+  sockets: Set<WebSocket>;
 }
 
 export type EventCallback = (data: any) => void;
