@@ -122,7 +122,7 @@ export const CreateRoomPage = () => {
               <p>Copy room ID: {roomId}</p>
               <p>Or share this link:</p>
               <div className={styles.linkWrapper}>
-                <Input type='text' value={joinLink} placeholder={''} readOnly={true} />
+                <Input type='text' value={joinLink} placeholder={''} />
                 <Button variant={'default'} onClick={handleCopyLink}><CopyIcon /></Button>
               </div>
               <Button variant={'primary'} fullWidth bgColor='rgb(199 225 250)' onClick={handleJoinRoom}>Join the room</Button>

@@ -4,7 +4,6 @@ class ChatApiClient {
   private API_URL: string;
   private WS_URL: string;
   private ws: WebSocket | null = null;
-  private isReady = false;
   private reconnectAttempts = 0;
   private maxReconnectAttempts = 5;
   private reconnectInterval = 3000;
@@ -50,14 +49,12 @@ class ChatApiClient {
   }
 
   connectWebSocket(roomId: string, userName: string) {
-    if (this.ws) return;
+    if (this.ws) this.disconnectWebSocket(roomId, userName);
 
     this.ws = new WebSocket(`${this.WS_URL}?room=${roomId}&name=${userName}`);
-    this.isReady = false;
 
     this.ws.onopen = () => {
       this.reconnectAttempts = 0;
-      this.isReady = true;
 
       while (this.pendingMessages.length > 0) {
         const message = this.pendingMessages.shift();
@@ -79,14 +76,8 @@ class ChatApiClient {
       }
     };
 
-    this.ws.onerror = (error) => {
-      console.error('[ERROR] WebSocket encountered an error:', error);
-      console.warn('[WARNING] Trying to reconnect...');
-    };
-
     this.ws.onclose = () => {
       this.ws = null;
-      this.isReady = false;
 
       if (this.heartbeatInterval) {
         clearInterval(this.heartbeatInterval);
@@ -107,12 +98,8 @@ class ChatApiClient {
   disconnectWebSocket(roomId: string, userId: string) {
     if (this.ws) {
       this.sendWebSocketMessage({ type: ChatEventType.LEAVE, userId });
-
-      setTimeout(() => {
-        this.ws?.close();
-        this.ws = null;
-        this.isReady = false;
-      }, 500);
+      this.ws.onclose = null;
+      this.ws.close();
     }
   }
 
@@ -124,8 +111,6 @@ class ChatApiClient {
 
     if (this.ws.readyState === WebSocket.OPEN) {
       this.ws.send(JSON.stringify(message));
-    } else {
-      console.error('[ERROR] WebSocket is closed. Cannot send message.');
     }
   }
 

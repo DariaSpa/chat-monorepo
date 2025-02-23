@@ -1,20 +1,9 @@
 import React, { useState } from 'react';
-import { ChatEventType } from '@chat-monorepo/chat-api';
+import { ChatEventType, ChatMessage } from '@chat-monorepo/chat-api';
 import MessageTextbox from '../MessageTextbox/MessageTextbox';
 import Button from '../Button/Button';
 import { useChatApi } from '../../api/useChatApi';
 import styles from './Message.module.scss';
-
-export interface ChatMessage {
-  id: string;
-  userId: string;
-  userName: string;
-  content: string;
-  timestamp: number;
-  type?: 'bot' | 'user';
-  isEdited?: boolean;
-  isDeleted?: boolean;
-}
 
 export interface MessageProps {
   message: ChatMessage;

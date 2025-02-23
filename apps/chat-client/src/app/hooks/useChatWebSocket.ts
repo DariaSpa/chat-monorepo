@@ -1,5 +1,5 @@
 import { useEffect, useCallback } from 'react';
-import { ChatEventType } from '@chat-monorepo/chat-api';
+import { ChatEventType, ChatMessage } from '@chat-monorepo/chat-api';
 import { useChatStore } from '../store/chatStore';
 import { useChatApi } from '../api/useChatApi';
 
@@ -12,7 +12,7 @@ export const useChatWebSocket = (roomId: string | undefined, user: string | null
     setRoomName(data.roomName);
   }, []);
 
-  const handleUpdate = useCallback((data: { users: Record<string, string>; messages: any[] }) => {
+  const handleUpdate = useCallback((data: { users: Record<string, string>; messages: ChatMessage[] }) => {
     setUsers(data.users);
     setMessages(data.messages);
   }, []);
@@ -21,7 +21,6 @@ export const useChatWebSocket = (roomId: string | undefined, user: string | null
     if (!roomId || !user) {
       return;
     }
-
     chatApiClient.connectWebSocket(roomId, user);
     chatApiClient.on(ChatEventType.CONNECTED, handleConnected);
     chatApiClient.on(ChatEventType.UPDATE, handleUpdate);
