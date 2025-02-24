@@ -1,43 +1,27 @@
-import { useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useState } from 'react';
 
 import Header from '../../components/Header/Header';
 import Input from '../../components/Input/Input';
 import Button from '../../components/Button/Button';
-
-import styles from './CreateRoomPage.module.scss';
 import BackIcon from '../../../assets/icons/BackIcon';
 import Modal from '../../components/Modal/Modal';
 import CopyIcon from '../../../assets/icons/CopyIcon';
+
 import { useChatApi } from '../../api/useChatApi';
+import { useRoomNavigation } from '../../hooks/useRoomNavigation';
+import styles from './CreateRoomPage.module.scss';
 
 export const CreateRoomPage = () => {
-  const [option, setOption] = useState<'join' | 'create' | null>(null)
-  const [roomId, setRoomId] = useState('');
+  const [option, setOption] = useState<'join' | 'create' | null>(null);
   const [roomName, setRoomName] = useState('');
-  const [userName, setUserName] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [joinLink, setJoinLink] = useState('');
 
+  const chatApi = useChatApi();
+  const { roomId, setRoomId, userName, setUserName, navigateToChat } = useRoomNavigation();
+
   const isJoinDisabled = !userName.trim() || !roomId.trim();
   const isCreateDisabled = !userName.trim() || !roomName.trim();
-
-  const chatApi = useChatApi();
-  const navigate = useNavigate();
-  const [ searchParams ] = useSearchParams();
-
-  const join = searchParams.get('join');
-
-  useEffect(() => {
-    if (join) {
-      setOption('join');
-      setRoomId(join);
-    }
-  }, [join]);
-
-  const navigateToChat = () => {
-    navigate(`/chat/${roomId}?user=${userName}`);
-  }
 
   const handleCreateRoom = async () => {
     try {
@@ -123,9 +107,9 @@ export const CreateRoomPage = () => {
               <p>Or share this link:</p>
               <div className={styles.linkWrapper}>
                 <Input type='text' value={joinLink} placeholder={''} />
-                <Button variant={'default'} onClick={handleCopyLink}><CopyIcon /></Button>
+                <Button variant='default' tooltip='Copy' onClick={handleCopyLink}><CopyIcon /></Button>
               </div>
-              <Button variant={'primary'} fullWidth bgColor='rgb(199 225 250)' onClick={handleJoinRoom}>Join the room</Button>
+              <Button variant='primary' fullWidth bgColor='rgb(199 225 250)' onClick={handleJoinRoom}>Join the room</Button>
             </div>
           }
           onClose={handleCloseModal}

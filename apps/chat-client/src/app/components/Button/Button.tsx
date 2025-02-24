@@ -8,6 +8,7 @@ type ButtonProps = {
   bgColor?: string; 
   disabled?: boolean;
   onClick?: () => void;
+  tooltip?: string;
 };
 
 const Button: React.FC<ButtonProps> = ({
@@ -17,6 +18,7 @@ const Button: React.FC<ButtonProps> = ({
   fullWidth = false,
   bgColor,
   disabled = false,
+  tooltip,
 }) => {
   return (
     <button
@@ -26,6 +28,7 @@ const Button: React.FC<ButtonProps> = ({
       onClick={onClick}
       style={bgColor ? { backgroundColor: bgColor } : {}}
       disabled={disabled}
+      title={tooltip}
     >
       {children}
     </button>
